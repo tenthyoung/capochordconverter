@@ -1628,6 +1628,11 @@ chalk@^4.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
+chord-magic@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/chord-magic/-/chord-magic-2.1.1.tgz#e61897f304a712c8f61fada66d057b76a5867f01"
+  integrity sha512-Ci589AkKx8gnibsmBZzA8Aume/QWEMNuwHF8SZf3Fb7GCRIEy3Opi81+iI4jfIHhY8GOG+t3VY9C/2oSM2HCkA==
+
 color-convert@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
