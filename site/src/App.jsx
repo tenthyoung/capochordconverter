@@ -7,7 +7,16 @@ import {
   FormLabel,
   Heading,
   Input,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
@@ -15,8 +24,7 @@ import "./App.css";
 
 function App() {
   const [capo, setCapo] = React.useState(undefined);
-  const [transposedChord, setTransposedChord] = React.useState(undefined);
-  const [chord, setChord] = React.useState(undefined);
+  const [chordConversionArray, setChordConversionArray] = React.useState([]);
   const {
     register,
     handleSubmit,
@@ -25,38 +33,34 @@ function App() {
   } = useForm();
   const onSubmit = (data) => {
     console.log("@@@ data", data);
-    const { chord, capo } = data;
+    const { chords, capo } = data;
     const halfSteps = capo;
+
+    // transpose chords
+    const chordArray = chords.trim().split(" ");
+    const chordConversionArray = chordArray.map((chord) => {
+      const parsedChord = chordMagic.parse(chord);
+      const transposedChord = chordMagic.transpose(parsedChord, -halfSteps);
+      return {
+        desiredChord: chord,
+        chordShape: chordMagic.prettyPrint(transposedChord),
+      };
+    });
+
+    // set data to be used for results
     setCapo(halfSteps);
-    setChord(chord);
-    const parsedChord = chordMagic.parse(chord);
-    setTransposedChord(chordMagic.transpose(parsedChord, -halfSteps).root);
+    setChordConversionArray(chordConversionArray);
   };
-
-  // const chord = chordMagic.parse("C"); // { root: 'A', quality: 'Major', extended: 'Dominant7' }
-  // const halfSteps = 4;
-  // const transposedChord = chordMagic.transpose(chord, halfSteps);
-
-  // console.log(
-  //   "@@@ reverse transpose",
-  //   chordMagic.transpose(chordMagic.parse("E"), -4)
-  // );
-
-  // console.log("@@@ chord: ", chord);
-  // console.log("@@@ transposedChord: ", transposedChord);
-  // console.log(
-  //   `To play an easier version of ${transposedChord.root}, move your capo to ${halfSteps}, and play ${chord.root}`
-  // );
 
   return (
     <Box height="full">
-      <Container textAlign="left">
+      <Container textAlign="left" py="24">
         <Heading as="h1" size="2xl" mb="6">
           Capo Chord Converter
         </Heading>
         <Text mb="8">
-          Paste your tabs into the text area. Choose the fret you want to capo
-          on, and it will be converted below
+          Input the chords you want to play, and we will give you the chord
+          shapes you should play for the capo you suggest
         </Text>
         {/* "handleSubmit" will validate your inputs before invoking "onSubmit" */}
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -64,7 +68,7 @@ function App() {
           <FormLabel size="lg" fontWeight={"bold"}>
             Chords in the song:
           </FormLabel>
-          <Input mb="5" placeholder="B G#m C Em" {...register("chord")} />
+          <Input mb="5" placeholder="B G#m C Em" {...register("chords")} />
 
           {/* include validation with required or other standard HTML validation rules */}
           <FormLabel size="lg" fontWeight={"bold"}>
@@ -85,14 +89,29 @@ function App() {
           </Button>
         </form>
 
-        {transposedChord && (
+        {chordConversionArray.length > 0 && (
           <Box mt="16">
-            <Heading as="h2" size="xl">
+            <Heading as="h2" size="xl" mb="8">
               Result
             </Heading>
-            <Text>
-              To play {chord} on Capo {capo}, play {transposedChord}
-            </Text>
+            <TableContainer>
+              <Table variant="striped" colorScheme="purple">
+                <Thead>
+                  <Tr>
+                    <Th>Chord</Th>
+                    <Th>Chord shape on Capo {capo}</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {chordConversionArray.map(({ desiredChord, chordShape }) => (
+                    <Tr key={desiredChord}>
+                      <Td>{desiredChord}</Td>
+                      <Td>{chordShape}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
           </Box>
         )}
       </Container>
