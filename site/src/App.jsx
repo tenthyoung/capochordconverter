@@ -1,5 +1,3 @@
-import React from "react";
-import * as chordMagic from "chord-magic";
 import {
   Box,
   Button,
@@ -8,31 +6,33 @@ import {
   Heading,
   Input,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
   Text,
-  Tfoot,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import * as chordMagic from "chord-magic";
+import React from "react";
 import { useForm } from "react-hook-form";
+import Lottie from "react-lottie-player";
+import ladyGuitarPlayerAnimation from "./assets/lady-guitar-player.json";
 
 import "./App.css";
 
 function App() {
   const [capo, setCapo] = React.useState(undefined);
   const [chordConversionArray, setChordConversionArray] = React.useState([]);
+
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
+
   const onSubmit = (data) => {
-    console.log("@@@ data", data);
     const { chords, capo } = data;
     const halfSteps = capo;
 
@@ -55,6 +55,12 @@ function App() {
   return (
     <Box height="full">
       <Container textAlign="left" py="24">
+        <Lottie
+          loop
+          animationData={ladyGuitarPlayerAnimation}
+          play
+          style={{ width: "100%", height: "auto" }}
+        />
         <Heading as="h1" size="2xl" mb="6">
           Capo Chord Converter
         </Heading>
