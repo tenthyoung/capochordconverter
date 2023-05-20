@@ -54,7 +54,7 @@ function App() {
 
   return (
     <Box height="full">
-      <Container textAlign="left" py="24">
+      <Container textAlign="left">
         <Lottie
           loop
           animationData={ladyGuitarPlayerAnimation}
